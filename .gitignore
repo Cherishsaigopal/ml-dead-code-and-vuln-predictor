@@ -1,24 +1,7 @@
-# =========================
-# Ignore data & repositories
-# =========================
+# Ignore cloned repos
 data/raw/
-data/intermediate/
 
-# =========================
-# Python cache / temp
-# =========================
-__pycache__/
-*.pyc
-
-# =========================
-# Virtual environments
-# =========================
-.venv/
-env/
-
-# =========================
-# OS / editor files
-# =========================
-.DS_Store
-Thumbs.db
-.vscode/
+# Ignore intermediate folder EXCEPT specific output files
+data/intermediate/*
+!data/intermediate/version_hist.csv
+!data/intermediate/version_history_final.csv
