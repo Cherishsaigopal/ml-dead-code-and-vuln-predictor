@@ -21,6 +21,6 @@ def normalize_features(input_csv, output_csv):
     print("Normalized dataset saved to:", output_csv)
 if __name__ == "__main__":
     normalize_features(
-        input_csv="data/intermediate/integrated_features.csv",
-        output_csv="data/intermediate/normalized_dataset.csv"
+    input_csv="data/intermediate/labeled_dataset.csv",
+    output_csv="data/intermediate/normalized_dataset.csv"
     )
