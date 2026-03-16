@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import subprocess
 import sys
+from pathlib import Path
 
 
 def run_cmd(cmd: list[str]) -> None:
@@ -11,6 +12,14 @@ def run_cmd(cmd: list[str]) -> None:
 
 def main() -> None:
     dataset_path = "data/intermediate/normalized_dataset.csv"
+    reports_dir = Path("reports")
+    report_file = reports_dir / "evaluation_report.md"
+
+    reports_dir.mkdir(parents=True, exist_ok=True)
+
+    if report_file.exists():
+        report_file.unlink()
+        print(f"[INFO] Removed old report: {report_file}")
 
     run_cmd([
         sys.executable,

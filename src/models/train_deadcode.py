@@ -82,6 +82,26 @@ def main() -> None:
     df = load_dataset(args.input)
     X, y, meta, feature_cols = get_features_and_target(df, "label_deadcode")
 
+    leakage_cols = [
+        "unreachable_blocks",
+        "unreachable_ratio",
+    ]
+
+# Optional: also remove these if they directly define your dead-code label
+    possible_extra_leaks = [
+        "caller_count",
+        "zero_callers",
+        "is_called",
+    ]
+
+    drop_leaks = [c for c in leakage_cols + possible_extra_leaks if c in X.columns]
+
+    X = X.drop(columns=drop_leaks, errors="ignore")
+    feature_cols = [c for c in feature_cols if c not in drop_leaks]
+
+    print(f"[INFO] Dropped leakage columns for dead-code training: {drop_leaks}")
+    print(f"[INFO] Dead-code feature count: {len(feature_cols)}")
+
     X_train, X_test, y_train, y_test, meta_train, meta_test = train_test_split(
         X, y, meta,
         test_size=args.test_size,
