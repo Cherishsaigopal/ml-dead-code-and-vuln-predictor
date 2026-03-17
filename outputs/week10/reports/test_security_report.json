@@ -1,0 +1,99 @@
+[
+  {
+    "file": "C:\\ml dead code and vuln predictor\\test.cpp",
+    "function_name": "helper",
+    "function_id": "d3f30dd28bf192bd",
+    "dead_probability": 0.98,
+    "vulnerability_probability": 0.455,
+    "dead_risk": "high",
+    "vulnerability_risk": "medium",
+    "overall_risk": "high",
+    "action": "flag",
+    "reason": "High-risk suspicious code detected and flagged for review.",
+    "indicators": [
+      "No major static indicators exceeded rule thresholds"
+    ],
+    "features_used": {
+      "basic_blocks": 4.0,
+      "branch_count": 1.0,
+      "call_count": 1.0,
+      "cfg_edges": 5.0,
+      "churn": 0.0,
+      "commit_count": 0.0,
+      "cyclomatic": 2.0,
+      "high_risk_api_flag": 0.0,
+      "loc": 7.0,
+      "loop_count": 0.0,
+      "max_nesting_depth": 2.0,
+      "return_count": 2.0,
+      "sensitive_api_calls": 0.0,
+      "unreachable_blocks": 0.0,
+      "unreachable_ratio": 0.0
+    }
+  },
+  {
+    "file": "C:\\ml dead code and vuln predictor\\test.cpp",
+    "function_name": "risky_copy",
+    "function_id": "e6b57259bf1cf250",
+    "dead_probability": 0.28,
+    "vulnerability_probability": 0.0,
+    "dead_risk": "low",
+    "vulnerability_risk": "low",
+    "overall_risk": "low",
+    "action": "allow",
+    "reason": "No significant security risk detected.",
+    "indicators": [
+      "Sensitive API usage detected",
+      "High-risk API flag triggered"
+    ],
+    "features_used": {
+      "basic_blocks": 1.0,
+      "branch_count": 0.0,
+      "call_count": 2.0,
+      "cfg_edges": 1.0,
+      "churn": 0.0,
+      "commit_count": 0.0,
+      "cyclomatic": 1.0,
+      "high_risk_api_flag": 1.0,
+      "loc": 5.0,
+      "loop_count": 0.0,
+      "max_nesting_depth": 1.0,
+      "return_count": 0.0,
+      "sensitive_api_calls": 1.0,
+      "unreachable_blocks": 0.0,
+      "unreachable_ratio": 0.0
+    }
+  },
+  {
+    "file": "C:\\ml dead code and vuln predictor\\test.cpp",
+    "function_name": "main",
+    "function_id": "fee7fc72964355e8",
+    "dead_probability": 0.28,
+    "vulnerability_probability": 0.01,
+    "dead_risk": "low",
+    "vulnerability_risk": "low",
+    "overall_risk": "low",
+    "action": "allow",
+    "reason": "No significant security risk detected.",
+    "indicators": [
+      "No major static indicators exceeded rule thresholds"
+    ],
+    "features_used": {
+      "basic_blocks": 2.0,
+      "branch_count": 0.0,
+      "call_count": 3.0,
+      "cfg_edges": 2.0,
+      "churn": 0.0,
+      "commit_count": 0.0,
+      "cyclomatic": 1.0,
+      "high_risk_api_flag": 0.0,
+      "loc": 7.0,
+      "loop_count": 0.0,
+      "max_nesting_depth": 1.0,
+      "return_count": 1.0,
+      "sensitive_api_calls": 0.0,
+      "unreachable_blocks": 0.0,
+      "unreachable_ratio": 0.0
+    }
+  }
+]

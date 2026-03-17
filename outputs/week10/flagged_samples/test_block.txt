@@ -1,0 +1,15 @@
+========================================================================
+SECURITY ALERT
+------------------------------------------------------------------------
+File                 : C:\ml dead code and vuln predictor\test.cpp
+Function             : sample_function
+Function ID          : func_001
+Dead Code Probability: 0.9800
+Vuln Probability     : 0.9950
+Dead Risk            : HIGH
+Vuln Risk            : CRITICAL
+Overall Risk         : CRITICAL
+Compiler Action      : BLOCK
+Reason               : Critical vulnerability risk exceeds allowed threshold.
+Indicators           :
+  - No major static indicators exceeded rule thresholds
