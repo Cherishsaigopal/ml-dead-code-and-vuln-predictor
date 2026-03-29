@@ -6,22 +6,25 @@ from typing import List, Tuple
 import pandas as pd
 
 
+# ✅ FIXED: These must match what models were trained with!
+# Dead Code Model uses: 12 features (WITHOUT unreachable_blocks, unreachable_ratio, call_count)
+# Vulnerability Model uses: 13 features (WITHOUT sensitive_api_calls, high_risk_api_flag)
 EXPECTED_FEATURE_COLUMNS = [
     "loc",
     "cyclomatic",
     "branch_count",
     "loop_count",
     "max_nesting_depth",
-    "call_count",
-    "return_count",
+    "return_count",  # This is what dead code model expects
     "basic_blocks",
     "cfg_edges",
-    "unreachable_blocks",
-    "unreachable_ratio",
-    "sensitive_api_calls",
-    "high_risk_api_flag",
+    "unreachable_blocks",     # Only for vuln model
+    "unreachable_ratio",       # Only for vuln model
     "commit_count",
     "churn",
+    # NOT: call_count (dropped for dead code)
+    # NOT: sensitive_api_calls (dropped for vuln)
+    # NOT: high_risk_api_flag (dropped for vuln)
 ]
 
 

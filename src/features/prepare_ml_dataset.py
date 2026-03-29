@@ -5,17 +5,17 @@ from sklearn.preprocessing import StandardScaler
 def normalize_features(input_csv, output_csv):
     df = pd.read_csv(input_csv)
 
-    # ✅ DEADCODE FEATURES (includes unreachable for dead code detection)
+    # ✅ DEAD CODE FEATURES - DO NOT include unreachable metrics!
+    # They are dropped during training to prevent leakage
     deadcode_features = [
         "loc", "cyclomatic", "branch_count", "loop_count",
-        "max_nesting_depth", "call_count", "return_count",
+        "max_nesting_depth", "return_count",
         "basic_blocks", "cfg_edges",
-        "unreachable_blocks",      # ✅ MUST INCLUDE for dead code training
-        "unreachable_ratio",       # ✅ MUST INCLUDE for dead code training
         "commit_count", "churn"
+        # NOT: unreachable_blocks, unreachable_ratio, call_count (dropped in training)
     ]
     
-    # ✅ VULNERABILITY FEATURES (NO sensitive_api_calls to prevent leakage)
+    # ✅ VULNERABILITY FEATURES - NO sensitive APIs!
     vuln_features = [
         "loc", "cyclomatic", "branch_count", "loop_count",
         "max_nesting_depth", "call_count", "return_count",
@@ -23,7 +23,7 @@ def normalize_features(input_csv, output_csv):
         "unreachable_blocks",      # Can use for complexity
         "unreachable_ratio",       # Can use for complexity
         "commit_count", "churn"
-        # NOT: sensitive_api_calls (prevents leakage!)
+        # NOT: sensitive_api_calls, high_risk_api_flag (prevents leakage!)
     ]
 
     # Normalize all features together
@@ -35,7 +35,8 @@ def normalize_features(input_csv, output_csv):
     df.to_csv(output_csv, index=False)
     print("✅ Normalized dataset saved to:", output_csv)
     print(f"Features used: {len(all_features)}")
-    print(f"Includes unreachable metrics: YES (for dead code training)")
+    print(f"Dead code features: {len(deadcode_features)} (unreachable metrics EXCLUDED)")
+    print(f"Vuln features: {len(vuln_features)}")
 
 if __name__ == "__main__":
     normalize_features(

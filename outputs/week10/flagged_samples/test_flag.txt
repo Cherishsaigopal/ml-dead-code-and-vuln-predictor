@@ -4,13 +4,13 @@ SECURITY ALERT
 File                 : C:\ml dead code and vuln predictor\test.cpp
 Function             : test1
 Function ID          : 5629d4e40df79e04
-Dead Code Probability: 0.0900
+Dead Code Probability: 1.0000
 Vuln Probability     : 0.0072
-Dead Risk            : LOW
+Dead Risk            : HIGH
 Vuln Risk            : LOW
-Overall Risk         : LOW
-Compiler Action      : ALLOW
-Reason               : No significant security risk detected.
+Overall Risk         : HIGH
+Compiler Action      : FLAG
+Reason               : High-risk suspicious code detected and flagged for review.
 Indicators           :
   - High code churn
 
@@ -20,13 +20,13 @@ SECURITY ALERT
 File                 : C:\ml dead code and vuln predictor\test.cpp
 Function             : test2
 Function ID          : 99ec72de0010ba8f
-Dead Code Probability: 0.0900
+Dead Code Probability: 1.0000
 Vuln Probability     : 0.0072
-Dead Risk            : LOW
+Dead Risk            : HIGH
 Vuln Risk            : LOW
-Overall Risk         : LOW
-Compiler Action      : ALLOW
-Reason               : No significant security risk detected.
+Overall Risk         : HIGH
+Compiler Action      : FLAG
+Reason               : High-risk suspicious code detected and flagged for review.
 Indicators           :
   - High code churn
 
@@ -36,13 +36,13 @@ SECURITY ALERT
 File                 : C:\ml dead code and vuln predictor\test.cpp
 Function             : test3
 Function ID          : e83c878b15c1c31e
-Dead Code Probability: 0.1100
+Dead Code Probability: 1.0000
 Vuln Probability     : 0.0072
-Dead Risk            : LOW
+Dead Risk            : HIGH
 Vuln Risk            : LOW
-Overall Risk         : LOW
-Compiler Action      : ALLOW
-Reason               : No significant security risk detected.
+Overall Risk         : HIGH
+Compiler Action      : FLAG
+Reason               : High-risk suspicious code detected and flagged for review.
 Indicators           :
   - Sensitive API usage detected
   - High-risk API flag triggered
@@ -54,13 +54,13 @@ SECURITY ALERT
 File                 : C:\ml dead code and vuln predictor\test.cpp
 Function             : test4
 Function ID          : f669e31fe5b94079
-Dead Code Probability: 0.0900
+Dead Code Probability: 1.0000
 Vuln Probability     : 0.0072
-Dead Risk            : LOW
+Dead Risk            : HIGH
 Vuln Risk            : LOW
-Overall Risk         : LOW
-Compiler Action      : ALLOW
-Reason               : No significant security risk detected.
+Overall Risk         : HIGH
+Compiler Action      : FLAG
+Reason               : High-risk suspicious code detected and flagged for review.
 Indicators           :
   - High code churn
 
@@ -70,13 +70,13 @@ SECURITY ALERT
 File                 : C:\ml dead code and vuln predictor\test.cpp
 Function             : test5
 Function ID          : 2ba103bc1c498beb
-Dead Code Probability: 0.1100
+Dead Code Probability: 1.0000
 Vuln Probability     : 0.0072
-Dead Risk            : LOW
+Dead Risk            : HIGH
 Vuln Risk            : LOW
-Overall Risk         : LOW
-Compiler Action      : ALLOW
-Reason               : No significant security risk detected.
+Overall Risk         : HIGH
+Compiler Action      : FLAG
+Reason               : High-risk suspicious code detected and flagged for review.
 Indicators           :
   - Sensitive API usage detected
   - High-risk API flag triggered
@@ -88,7 +88,7 @@ SECURITY ALERT
 File                 : C:\ml dead code and vuln predictor\test.cpp
 Function             : main
 Function ID          : 7951ecafc55d1fa8
-Dead Code Probability: 0.9900
+Dead Code Probability: 0.8700
 Vuln Probability     : 0.0398
 Dead Risk            : HIGH
 Vuln Risk            : LOW

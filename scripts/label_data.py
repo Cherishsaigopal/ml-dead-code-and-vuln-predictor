@@ -4,19 +4,15 @@ import pandas as pd
 def label_dataset(input_csv, output_csv):
     df = pd.read_csv(input_csv)
 
-    file_col = df["file_name"].astype(str).str.lower()
-    func_col = df["function_name"].astype(str).str.lower()
-
-    # -------------------------
-    # DEAD CODE LABEL - IMPROVED
-    # -------------------------
-    # Include BOTH unreachable blocks AND unused variables/low-usage functions
-    df["label_deadcode"] = (
-        (df["unreachable_blocks"].fillna(0) >= 2) |
-        (df["unreachable_ratio"].fillna(0) >= 0.3)
-    ).astype(int)
-
-    # ✅ VULNERABILITY LABEL
+    # ✅ DEAD CODE LABEL - Use ONLY unreachable blocks from integrate_features
+    # Don't re-label - just keep what integrate_features already labeled
+    # (integrate_features.py already created label_deadcode based on dead_block_count)
+    
+    if "label_deadcode" not in df.columns:
+        # Fallback: if not present, use conservative rule
+        df["label_deadcode"] = 0  # Default: assume no dead code
+    
+    # ✅ VULNERABILITY LABEL  
     if "label_vuln" not in df.columns:
         df["label_vuln"] = (
             (df["sensitive_api_calls"].fillna(0) > 0) |
