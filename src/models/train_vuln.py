@@ -5,7 +5,9 @@ from pathlib import Path
 
 import joblib
 import pandas as pd
+import json
 from sklearn.ensemble import RandomForestClassifier
+from datetime import datetime  # ← ADD THIS
 from sklearn.impute import SimpleImputer
 from sklearn.metrics import make_scorer, f1_score
 from sklearn.model_selection import GridSearchCV, train_test_split
@@ -227,6 +229,19 @@ def main() -> None:
 
     print(f"[DONE] Best vulnerability model: {best_result['model_name']}")
     print(f"[DONE] Saved to: {models_dir} and {reports_dir}")
+    
+    metadata = {
+        "model_type": "vulnerability",
+        "features_include_unreachable": False,
+        "feature_count": len(feature_cols),
+        "features_used": sorted(feature_cols),
+        "training_date": datetime.now().isoformat(),
+    }
+
+    with open(models_dir / "vuln_model_metadata.json", "w") as f:
+        json.dump(metadata, f, indent=2)
+        
+    print(f"✅ Vulnerability Model: {len(feature_cols)} features (EXCLUDES unreachable_blocks/ratio)")
 
 
 if __name__ == "__main__":

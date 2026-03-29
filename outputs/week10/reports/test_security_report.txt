@@ -87,10 +87,10 @@ Function ID          : 7951ecafc55d1fa8
 Dead Code Probability: 0.0073
 Vuln Probability     : 0.1907
 Dead Risk            : LOW
-Vuln Risk            : LOW
-Overall Risk         : LOW
-Compiler Action      : ALLOW
-Reason               : No significant security risk detected.
+Vuln Risk            : MEDIUM
+Overall Risk         : MEDIUM
+Compiler Action      : WARN
+Reason               : Moderate risk detected; compilation allowed with warning.
 Indicators           :
   - Unreachable blocks detected
   - High code churn

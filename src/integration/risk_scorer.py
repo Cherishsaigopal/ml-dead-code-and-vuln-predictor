@@ -29,11 +29,11 @@ class RiskScorer:
 
     def __init__(
         self,
-        dead_medium: float = 0.40,
-        dead_high: float = 0.70,
-        vuln_medium: float = 0.30,
-        vuln_high: float = 0.60,
-        vuln_critical: float = 0.85,
+        dead_medium: float = 0.15,      # LOWERED from 0.40
+        dead_high: float = 0.35,        # LOWERED from 0.70
+        vuln_medium: float = 0.15,      # LOWERED from 0.30 (your outputs are 0.007-0.19)
+        vuln_high: float = 0.30,        # LOWERED from 0.60
+        vuln_critical: float = 0.50,
     ) -> None:
         self.dead_medium = dead_medium
         self.dead_high = dead_high

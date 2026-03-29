@@ -4,8 +4,12 @@ import argparse
 from pathlib import Path
 
 import joblib
+from datetime import datetime  # ← ADD THIS
 import pandas as pd
+import json
 from sklearn.ensemble import RandomForestClassifier
+from imblearn.over_sampling import SMOTE
+from imblearn.pipeline import Pipeline as ImbPipeline
 from sklearn.impute import SimpleImputer
 from sklearn.metrics import make_scorer, f1_score
 from sklearn.model_selection import GridSearchCV, train_test_split
@@ -24,6 +28,7 @@ try:
     XGB_AVAILABLE = True
 except Exception:
     XGB_AVAILABLE = False
+
 
 
 def build_rf_pipeline(random_state: int) -> tuple[Pipeline, dict]:
@@ -85,8 +90,7 @@ def main() -> None:
         
     leakage_cols = [
         "unreachable_blocks",    # Used in label!
-        "unreachable_ratio",     # Used in label!
-        "call_count",            # Also related to dead code
+        "unreachable_ratio",     # Used in label!          # Also related to dead code
     ]
     
     drop_leaks = [c for c in leakage_cols if c in X.columns]
@@ -160,7 +164,7 @@ def main() -> None:
         })
 
     comparison_rows = []
-    best_result = max(results, key=lambda r: r["metrics"]["f1_score"])
+    best_result = max(results, key=lambda r: r["metrics"].get("f1_score", 0))
 
     for result in results:
         name = result["model_name"]
@@ -219,6 +223,22 @@ def main() -> None:
 
     print(f"[DONE] Best dead code model: {best_result['model_name']}")
     print(f"[DONE] Saved to: {models_dir} and {reports_dir}")
+
+    # Save feature metadata for validation during prediction
+    
+
+    metadata = {
+        "model_type": "deadcode",
+        "features_include_unreachable": True,
+        "feature_count": len(feature_cols),
+        "features_used": sorted(feature_cols),
+        "training_date": datetime.now().isoformat(),
+    }
+
+    with open(models_dir / "deadcode_model_metadata.json", "w") as f:
+        json.dump(metadata, f, indent=2)
+        
+    print(f"✅ Dead Code Model: {len(feature_cols)} features (INCLUDES unreachable_blocks/ratio)")
 
 
 if __name__ == "__main__":

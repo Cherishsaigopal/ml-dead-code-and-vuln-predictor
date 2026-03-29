@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 import pandas as pd
+import json
 
 
 @dataclass
@@ -96,6 +97,10 @@ class ModelPredictor:
         features_df: pd.DataFrame,
         metadata_columns: Optional[List[str]] = None,
     ) -> List[PredictionResult]:
+        
+        if not self.validate_features(features_df):
+            raise ValueError("Feature set validation failed!")
+
         if metadata_columns is None:
             metadata_columns = ["function_id", "function_name", "file"]
 
@@ -136,3 +141,42 @@ class ModelPredictor:
             )
 
         return results
+    
+    def validate_features(self, df: pd.DataFrame) -> bool:
+        """Validate that input features match training features."""
+        
+        # Load metadata
+        dead_meta_path = self.model_dir / "deadcode_model_metadata.json"
+        vuln_meta_path = self.model_dir / "vuln_model_metadata.json"
+        
+        if not dead_meta_path.exists() or not vuln_meta_path.exists():
+            print("⚠️  WARNING: Model metadata not found. Skipping validation.")
+            return True
+        
+        with open(dead_meta_path) as f:
+            dead_meta = json.load(f)
+        with open(vuln_meta_path) as f:
+            vuln_meta = json.load(f)
+        
+        # Check dead code features
+        dead_features_expected = set(dead_meta["features_used"])
+        dead_features_actual = set(self.dead_feature_columns)
+        
+        if dead_features_expected != dead_features_actual:
+            print(f"❌ DEAD CODE feature mismatch!")
+            print(f"  Expected: {sorted(dead_features_expected)}")
+            print(f"  Got:      {sorted(dead_features_actual)}")
+            return False
+        
+        # Check vuln features
+        vuln_features_expected = set(vuln_meta["features_used"])
+        vuln_features_actual = set(self.vuln_feature_columns)
+        
+        if vuln_features_expected != vuln_features_actual:
+            print(f"❌ VULNERABILITY feature mismatch!")
+            print(f"  Expected: {sorted(vuln_features_expected)}")
+            print(f"  Got:      {sorted(vuln_features_actual)}")
+            return False
+        
+        print("✅ Feature validation PASSED")
+        return True

@@ -151,10 +151,10 @@
     "dead_probability": 0.007280729245394468,
     "vulnerability_probability": 0.1907155103357457,
     "dead_risk": "low",
-    "vulnerability_risk": "low",
-    "overall_risk": "low",
-    "action": "allow",
-    "reason": "No significant security risk detected.",
+    "vulnerability_risk": "medium",
+    "overall_risk": "medium",
+    "action": "warn",
+    "reason": "Moderate risk detected; compilation allowed with warning.",
     "indicators": [
       "Unreachable blocks detected",
       "High code churn"

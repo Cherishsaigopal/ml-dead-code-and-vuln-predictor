@@ -1,0 +1,18 @@
+{
+  "model_type": "deadcode",
+  "features_include_unreachable": true,
+  "feature_count": 10,
+  "features_used": [
+    "basic_blocks",
+    "branch_count",
+    "cfg_edges",
+    "churn",
+    "commit_count",
+    "cyclomatic",
+    "loc",
+    "loop_count",
+    "max_nesting_depth",
+    "return_count"
+  ],
+  "training_date": "2026-03-29T21:46:44.640632"
+}
