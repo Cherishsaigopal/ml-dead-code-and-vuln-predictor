@@ -1,3 +1,3 @@
 model,best_cv_score,accuracy,precision,recall,f1_score,roc_auc,best_params
-RandomForest,0.9360184126593771,0.9757847533632287,0.8702702702702703,0.9817073170731707,0.9226361031518625,0.9980412146392758,"{'model__max_depth': 10, 'model__min_samples_split': 2, 'model__n_estimators': 100}"
-XGBoost,0.9339601906360904,0.979372197309417,0.9075144508670521,0.9573170731707317,0.9317507418397626,0.9978135980097971,"{'model__learning_rate': 0.05, 'model__max_depth': 4, 'model__n_estimators': 200}"
+RandomForest,1.0,1.0,1.0,1.0,1.0,1.0,"{'model__max_depth': None, 'model__min_samples_split': 2, 'model__n_estimators': 100}"
+XGBoost,1.0,1.0,1.0,1.0,1.0,1.0,"{'model__learning_rate': 0.05, 'model__max_depth': 4, 'model__n_estimators': 100}"

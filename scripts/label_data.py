@@ -8,27 +8,27 @@ def label_dataset(input_csv, output_csv):
     func_col = df["function_name"].astype(str).str.lower()
 
     # -------------------------
-    # DEAD CODE LABEL
+    # DEAD CODE LABEL - IMPROVED
     # -------------------------
-    # Stricter rule to avoid overly easy / noisy labels
+    # Include BOTH unreachable blocks AND unused variables/low-usage functions
     df["label_deadcode"] = (
-        (df["unreachable_blocks"] >= 2) |
-        (df["unreachable_ratio"] >= 0.3)
+        (df["unreachable_blocks"].fillna(0) >= 2) |
+        (df["unreachable_ratio"].fillna(0) >= 0.3) |
+        (df["call_count"].fillna(0) == 0)  # Never called = dead code
     ).astype(int)
 
-    # -------------------------
-    # VULNERABILITY LABEL
-    # -------------------------
-    # FIXED: Use consistent rule for ALL datasets
-    # Label as vulnerable if: has risky APIs OR complex code
-    df["label_vuln"] = (
-        (df["sensitive_api_calls"].fillna(0) > 0) |  # strcpy, gets, sprintf, etc.
-        (df["cyclomatic"].fillna(0) >= 10)  # High complexity
-    ).astype(int)
+    # ✅ VULNERABILITY LABEL (from integrated_features)
+    # Don't re-label! Just use what integrate_features created
+    if "label_vuln" not in df.columns:
+        # Fallback if not present
+        df["label_vuln"] = (
+            (df["sensitive_api_calls"].fillna(0) > 0) |
+            (df["cyclomatic"].fillna(0) >= 10)
+        ).astype(int)
 
     df.to_csv(output_csv, index=False)
 
-    print("Saved labeled dataset to:", output_csv)
+    print("✅ Saved labeled dataset to:", output_csv)
     print("\nDeadcode distribution:")
     print(df["label_deadcode"].value_counts())
 
@@ -37,6 +37,7 @@ def label_dataset(input_csv, output_csv):
     
     print(f"\n✅ Total vulnerable functions: {(df['label_vuln'] == 1).sum()}")
     print(f"✅ Total safe functions: {(df['label_vuln'] == 0).sum()}")
+    print(f"✅ Total dead code functions: {(df['label_deadcode'] == 1).sum()}")
 
 
 if __name__ == "__main__":

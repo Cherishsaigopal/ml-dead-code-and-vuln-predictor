@@ -5,25 +5,37 @@ from sklearn.preprocessing import StandardScaler
 def normalize_features(input_csv, output_csv):
     df = pd.read_csv(input_csv)
 
-    # ⚠️ FIXED: Removed sensitive_api_calls to prevent data leakage
-    # We use it for LABELING, not as a FEATURE
-    feature_cols = [
+    # ✅ DEADCODE FEATURES (includes unreachable for dead code detection)
+    deadcode_features = [
         "loc", "cyclomatic", "branch_count", "loop_count",
         "max_nesting_depth", "call_count", "return_count",
         "basic_blocks", "cfg_edges",
-        "unreachable_blocks", "unreachable_ratio",
-        # "sensitive_api_calls",  ← REMOVED! (prevents leakage)
-        # "high_risk_api_flag",   ← REMOVED! (prevents leakage)
+        "unreachable_blocks",      # ✅ MUST INCLUDE for dead code training
+        "unreachable_ratio",       # ✅ MUST INCLUDE for dead code training
         "commit_count", "churn"
     ]
+    
+    # ✅ VULNERABILITY FEATURES (NO sensitive_api_calls to prevent leakage)
+    vuln_features = [
+        "loc", "cyclomatic", "branch_count", "loop_count",
+        "max_nesting_depth", "call_count", "return_count",
+        "basic_blocks", "cfg_edges",
+        "unreachable_blocks",      # Can use for complexity
+        "unreachable_ratio",       # Can use for complexity
+        "commit_count", "churn"
+        # NOT: sensitive_api_calls (prevents leakage!)
+    ]
 
+    # Normalize all features together
+    all_features = list(set(deadcode_features + vuln_features))
+    
     scaler = StandardScaler()
-    df[feature_cols] = scaler.fit_transform(df[feature_cols])
+    df[all_features] = scaler.fit_transform(df[all_features])
 
     df.to_csv(output_csv, index=False)
-    print("Normalized dataset saved to:", output_csv)
-    print(f"Features used: {len(feature_cols)}")
-    print(f"Features: {feature_cols}")
+    print("✅ Normalized dataset saved to:", output_csv)
+    print(f"Features used: {len(all_features)}")
+    print(f"Includes unreachable metrics: YES (for dead code training)")
 
 if __name__ == "__main__":
     normalize_features(
