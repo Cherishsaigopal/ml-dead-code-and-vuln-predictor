@@ -7,7 +7,8 @@ import joblib
 import pandas as pd
 import json
 from sklearn.ensemble import RandomForestClassifier
-from datetime import datetime  # ← ADD THIS
+from sklearn.preprocessing import StandardScaler
+from datetime import datetime
 from sklearn.impute import SimpleImputer
 from sklearn.metrics import make_scorer, f1_score
 from sklearn.model_selection import GridSearchCV, train_test_split
@@ -84,7 +85,20 @@ def main() -> None:
     df = load_dataset(args.input)
     X, y, meta, feature_cols = get_features_and_target(df, "label_vuln")
 
-    # ========== ADD THIS LEAKAGE REMOVAL SECTION ==========
+    # ✅ FIT AND SAVE SCALER (BEFORE dropping columns)
+    numeric_cols = X.select_dtypes(include=['number']).columns.tolist()
+    scaler = StandardScaler()
+    scaler.fit(X[numeric_cols])
+    
+    models_dir = Path(args.models_dir)
+    models_dir.mkdir(parents=True, exist_ok=True)
+    joblib.dump(scaler, models_dir / "feature_scaler.joblib")
+    print(f"✅ Saved feature scaler to {models_dir / 'feature_scaler.joblib'}")
+    
+    # Scale the features
+    X[numeric_cols] = scaler.transform(X[numeric_cols])
+
+    # ========== LEAKAGE REMOVAL SECTION ==========
     leakage_cols = [
         "sensitive_api_calls",      # Used in: sensitive_api_calls > 0
         "high_risk_api_flag",       # Used in vulnerability label
@@ -119,7 +133,6 @@ def main() -> None:
     )
 
     scorer = make_scorer(f1_score, zero_division=0)
-    models_dir = Path(args.models_dir)
     reports_dir = Path(args.reports_dir)
     models_dir.mkdir(parents=True, exist_ok=True)
     reports_dir.mkdir(parents=True, exist_ok=True)
@@ -170,7 +183,7 @@ def main() -> None:
         })
 
     comparison_rows = []
-    best_result = max(results, key=lambda r: r["metrics"]["f1_score"])
+    best_result = max(results, key=lambda r: r["metrics"].get("f1_score", 0))
 
     for result in results:
         name = result["model_name"]
@@ -241,7 +254,7 @@ def main() -> None:
     with open(models_dir / "vuln_model_metadata.json", "w") as f:
         json.dump(metadata, f, indent=2)
         
-    print(f"✅ Vulnerability Model: {len(feature_cols)} features (EXCLUDES unreachable_blocks/ratio)")
+    print(f"✅ Vulnerability Model: {len(feature_cols)} features (EXCLUDES sensitive_api_calls/high_risk_api_flag)")
 
 
 if __name__ == "__main__":

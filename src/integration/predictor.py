@@ -24,6 +24,9 @@ class PredictionResult:
 class ModelPredictor:
     def __init__(self, model_dir: str = "models") -> None:
         self.model_dir = Path(model_dir)
+        
+        # ✅ Load scaler for feature normalization
+        self.scaler = self._load_scaler()
 
         dead_bundle = self._load_bundle("best_deadcode_model.joblib")
         vuln_bundle = self._load_bundle("best_vuln_model.joblib")
@@ -37,6 +40,17 @@ class ModelPredictor:
         self.vuln_feature_columns = self._extract_feature_columns(
             vuln_bundle, "best_vuln_model.joblib"
         )
+
+    def _load_scaler(self):
+        """Load the fitted scaler from training."""
+        scaler_path = self.model_dir / "feature_scaler.joblib"
+        if scaler_path.exists():
+            scaler = joblib.load(scaler_path)
+            print(f"✅ Loaded feature scaler from {scaler_path}")
+            return scaler
+        else:
+            print(f"⚠️  WARNING: Scaler not found at {scaler_path}. Features will NOT be normalized!")
+            return None
 
     def _load_bundle(self, filename: str):
         path = self.model_dir / filename
@@ -102,7 +116,8 @@ class ModelPredictor:
             raise ValueError("Feature set validation failed!")
 
         if metadata_columns is None:
-            metadata_columns = ["function_id", "function_name", "file"]
+            # Use the ACTUAL column names from extraction
+            metadata_columns = ["sample_id", "function_name", "file_name"]
 
         missing_meta = [c for c in metadata_columns if c not in features_df.columns]
         if missing_meta:
@@ -111,14 +126,24 @@ class ModelPredictor:
         meta_df = features_df[metadata_columns].copy()
         raw_feature_df = features_df.drop(columns=metadata_columns, errors="ignore")
 
-        X_dead = self._align_features(raw_feature_df, self.dead_feature_columns)
-        X_vuln = self._align_features(raw_feature_df, self.vuln_feature_columns)
+        # ✅ SCALE FEATURES BEFORE PREDICTION
+        if self.scaler is not None:
+            numeric_cols = raw_feature_df.select_dtypes(include=['number']).columns.tolist()
+            raw_feature_df_scaled = raw_feature_df.copy()
+            raw_feature_df_scaled[numeric_cols] = self.scaler.transform(raw_feature_df[numeric_cols])
+            print(f"✅ Applied scaler to {len(numeric_cols)} numeric features")
+        else:
+            raw_feature_df_scaled = raw_feature_df.copy()
+            print(f"⚠️  WARNING: Using raw features (not normalized)")
+
+        X_dead = self._align_features(raw_feature_df_scaled, self.dead_feature_columns)
+        X_vuln = self._align_features(raw_feature_df_scaled, self.vuln_feature_columns)
 
         dead_probs = self._predict_proba_safe(self.dead_model, X_dead)
         vuln_probs = self._predict_proba_safe(self.vuln_model, X_vuln)
 
         combined_cols = sorted(set(self.dead_feature_columns) | set(self.vuln_feature_columns))
-        X_report = self._align_features(raw_feature_df, combined_cols)
+        X_report = self._align_features(raw_feature_df_scaled, combined_cols)
 
         results: List[PredictionResult] = []
         for i in range(len(features_df)):
@@ -127,11 +152,12 @@ class ModelPredictor:
             dead_prob = float(dead_probs[i])
             vuln_prob = float(vuln_probs[i])
 
+            # Map back to PredictionResult column names
             results.append(
                 PredictionResult(
-                    function_id=str(meta_df.iloc[i]["function_id"]),
+                    function_id=str(meta_df.iloc[i]["sample_id"]),  # sample_id → function_id
                     function_name=str(meta_df.iloc[i]["function_name"]),
-                    file=str(meta_df.iloc[i]["file"]),
+                    file=str(meta_df.iloc[i]["file_name"]),  # file_name → file
                     dead_prob=dead_prob,
                     dead_label=1 if dead_prob >= 0.5 else 0,
                     vuln_prob=vuln_prob,

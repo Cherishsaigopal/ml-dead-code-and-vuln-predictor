@@ -4,10 +4,11 @@ import argparse
 from pathlib import Path
 
 import joblib
-from datetime import datetime  # ← ADD THIS
+from datetime import datetime
 import pandas as pd
 import json
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import StandardScaler
 from imblearn.over_sampling import SMOTE
 from imblearn.pipeline import Pipeline as ImbPipeline
 from sklearn.impute import SimpleImputer
@@ -87,10 +88,22 @@ def main() -> None:
     df = load_dataset(args.input)
     X, y, meta, feature_cols = get_features_and_target(df, "label_deadcode")
 
-        
+    # ✅ FIT AND SAVE SCALER (BEFORE dropping columns)
+    numeric_cols = X.select_dtypes(include=['number']).columns.tolist()
+    scaler = StandardScaler()
+    scaler.fit(X[numeric_cols])
+    
+    models_dir = Path(args.models_dir)
+    models_dir.mkdir(parents=True, exist_ok=True)
+    joblib.dump(scaler, models_dir / "feature_scaler.joblib")
+    print(f"✅ Saved feature scaler to {models_dir / 'feature_scaler.joblib'}")
+    
+    # Scale the features
+    X[numeric_cols] = scaler.transform(X[numeric_cols])
+
     leakage_cols = [
         "unreachable_blocks",    # Used in label!
-        "unreachable_ratio",     # Used in label!          # Also related to dead code
+        "unreachable_ratio",     # Used in label!
     ]
     
     drop_leaks = [c for c in leakage_cols if c in X.columns]
@@ -102,9 +115,6 @@ def main() -> None:
     
     print(f"[INFO] Dead-code feature count: {len(feature_cols)}")
 
-
-    
-
     X_train, X_test, y_train, y_test, meta_train, meta_test = train_test_split(
         X, y, meta,
         test_size=args.test_size,
@@ -113,7 +123,6 @@ def main() -> None:
     )
 
     scorer = make_scorer(f1_score, zero_division=0)
-    models_dir = Path(args.models_dir)
     reports_dir = Path(args.reports_dir)
     models_dir.mkdir(parents=True, exist_ok=True)
     reports_dir.mkdir(parents=True, exist_ok=True)
@@ -224,12 +233,9 @@ def main() -> None:
     print(f"[DONE] Best dead code model: {best_result['model_name']}")
     print(f"[DONE] Saved to: {models_dir} and {reports_dir}")
 
-    # Save feature metadata for validation during prediction
-    
-
     metadata = {
         "model_type": "deadcode",
-        "features_include_unreachable": True,
+        "features_include_unreachable": False,
         "feature_count": len(feature_cols),
         "features_used": sorted(feature_cols),
         "training_date": datetime.now().isoformat(),
