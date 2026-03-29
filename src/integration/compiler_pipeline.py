@@ -14,6 +14,10 @@ from src.integration.enforcement import EnforcementDecision, SecurityEnforcer
 from src.integration.predictor import ModelPredictor, PredictionResult
 from src.integration.risk_scorer import RiskScoreResult, RiskScorer
 
+from src.Parser.clang_parser import ClangFunctionExtractor
+from src.cfg.builder import build_cfg
+from src.features.extract import extract_features_from_cfg, feature_row_to_dict
+
 
 @dataclass
 class PipelineOutput:
@@ -120,32 +124,48 @@ class SecureCompilerPipeline:
     # ------------------------------------------------------------------
 
     def _extract_features_from_file(self, file_path: str) -> pd.DataFrame:
-        path = Path(file_path)
-        code = path.read_text(encoding="utf-8", errors="ignore")
+        path = Path(file_path).resolve()
 
-        functions = self._extract_functions(code, str(path))
+        extractor = ClangFunctionExtractor()
+        functions = extractor.parse_file(path)
+
         if not functions:
-            functions = [
-                SimpleFunctionInfo(
-                    function_id=self._make_function_id(str(path), "file_scope", 1, max(1, len(code.splitlines()))),
-                    function_name="file_scope",
-                    file=str(path),
-                    start_line=1,
-                    end_line=max(1, len(code.splitlines())),
-                    code=code,
-                )
-            ]
+            raise ValueError(f"No functions parsed from file: {file_path}")
 
         repo_root = self._find_git_root(path)
-        rows: List[Dict] = []
+        commit_count, churn = self._git_history_features(path, repo_root)
+
+        rows = []
 
         for fn in functions:
-            row = {
-                "function_id": fn.function_id,
-                "function_name": fn.function_name,
-                "file": fn.file,
-            }
-            row.update(self._compute_function_features(fn, repo_root))
+            cfg = build_cfg(fn)
+
+            sample_id = self._make_function_id(
+                fn.file,
+                fn.name,
+                fn.start_line,
+                fn.end_line,
+            )
+
+            feature_row = extract_features_from_cfg(
+                sample_id=sample_id,
+                file_name=fn.file,
+                function_name=fn.name,
+                fn_start=fn.start_line,
+                fn_end=fn.end_line,
+                cfg=cfg,
+                fn_body_root=fn.body,
+                commit_count=commit_count,
+                churn=churn,
+            )
+
+            row = feature_row_to_dict(feature_row)
+
+            # predictor expects these metadata names
+            row["function_id"] = row.pop("sample_id")
+            row["function_name"] = row["function_name"]
+            row["file"] = row.pop("file_name")
+
             rows.append(row)
 
         return pd.DataFrame(rows)

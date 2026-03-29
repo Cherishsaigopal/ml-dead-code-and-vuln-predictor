@@ -1,0 +1,80 @@
+========================================================================
+SECURITY ALERT
+------------------------------------------------------------------------
+File                 : C:\ml dead code and vuln predictor\test.cpp
+Function             : bad
+Function ID          : 64eece37f6deff03
+Dead Code Probability: 0.2800
+Vuln Probability     : 0.0421
+Dead Risk            : LOW
+Vuln Risk            : LOW
+Overall Risk         : LOW
+Compiler Action      : ALLOW
+Reason               : No significant security risk detected.
+Indicators           :
+  - High code churn
+
+========================================================================
+SECURITY ALERT
+------------------------------------------------------------------------
+File                 : C:\ml dead code and vuln predictor\test.cpp
+Function             : bad_system
+Function ID          : a9bce437381d4df0
+Dead Code Probability: 0.2800
+Vuln Probability     : 0.0421
+Dead Risk            : LOW
+Vuln Risk            : LOW
+Overall Risk         : LOW
+Compiler Action      : ALLOW
+Reason               : No significant security risk detected.
+Indicators           :
+  - High code churn
+
+========================================================================
+SECURITY ALERT
+------------------------------------------------------------------------
+File                 : C:\ml dead code and vuln predictor\test.cpp
+Function             : dead_code_example
+Function ID          : f7d614fe0d24d35c
+Dead Code Probability: 0.3600
+Vuln Probability     : 0.3840
+Dead Risk            : LOW
+Vuln Risk            : MEDIUM
+Overall Risk         : MEDIUM
+Compiler Action      : WARN
+Reason               : Moderate risk detected; compilation allowed with warning.
+Indicators           :
+  - High code churn
+
+========================================================================
+SECURITY ALERT
+------------------------------------------------------------------------
+File                 : C:\ml dead code and vuln predictor\test.cpp
+Function             : good
+Function ID          : 619f6529dc4449f9
+Dead Code Probability: 0.2800
+Vuln Probability     : 0.0421
+Dead Risk            : LOW
+Vuln Risk            : LOW
+Overall Risk         : LOW
+Compiler Action      : ALLOW
+Reason               : No significant security risk detected.
+Indicators           :
+  - High code churn
+
+========================================================================
+SECURITY ALERT
+------------------------------------------------------------------------
+File                 : C:\ml dead code and vuln predictor\test.cpp
+Function             : main
+Function ID          : f470130a47f0325d
+Dead Code Probability: 0.2900
+Vuln Probability     : 0.0050
+Dead Risk            : LOW
+Vuln Risk            : LOW
+Overall Risk         : LOW
+Compiler Action      : ALLOW
+Reason               : No significant security risk detected.
+Indicators           :
+  - Unreachable blocks detected
+  - High code churn

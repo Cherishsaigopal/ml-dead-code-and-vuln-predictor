@@ -4,21 +4,21 @@
 
 **Best Model:** RandomForest
 
-- Accuracy: 0.9993
-- Precision: 1.0000
-- Recall: 0.9886
-- F1-Score: 0.9943
-- ROC-AUC: 0.9999861643331679
-- Confusion Matrix: [[10127, 0], [8, 695]]
+- Accuracy: 0.9532
+- Precision: 0.9224
+- Recall: 0.9841
+- F1-Score: 0.9522
+- ROC-AUC: 0.9877767233040716
+- Confusion Matrix: [[323, 26], [5, 309]]
 
 ## Vulnerability Prediction
 
-**Best Model:** RandomForest
+**Best Model:** XGBoost
 
-- Accuracy: 0.6514
-- Precision: 0.0979
-- Recall: 0.8044
-- F1-Score: 0.1745
-- ROC-AUC: 0.8102668259175787
-- Confusion Matrix: [[6656, 3678], [97, 399]]
+- Accuracy: 1.0000
+- Precision: 1.0000
+- Recall: 1.0000
+- F1-Score: 1.0000
+- ROC-AUC: 1.0
+- Confusion Matrix: [[533, 0], [0, 130]]
 
