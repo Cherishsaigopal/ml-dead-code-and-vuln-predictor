@@ -2,23 +2,23 @@
 
 ## Dead Code Prediction
 
-**Best Model:** RandomForest
+**Best Model:** XGBoost
 
-- Accuracy: 0.9532
-- Precision: 0.9224
-- Recall: 0.9841
-- F1-Score: 0.9522
-- ROC-AUC: 0.9877767233040716
-- Confusion Matrix: [[323, 26], [5, 309]]
+- Accuracy: 0.9794
+- Precision: 0.9075
+- Recall: 0.9573
+- F1-Score: 0.9318
+- ROC-AUC: 0.9978135980097971
+- Confusion Matrix: [[935, 16], [7, 157]]
 
 ## Vulnerability Prediction
 
-**Best Model:** XGBoost
+**Best Model:** RandomForest
 
 - Accuracy: 1.0000
 - Precision: 1.0000
 - Recall: 1.0000
 - F1-Score: 1.0000
 - ROC-AUC: 1.0
-- Confusion Matrix: [[533, 0], [0, 130]]
+- Confusion Matrix: [[1056, 0], [0, 59]]
 

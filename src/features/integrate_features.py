@@ -48,19 +48,16 @@ def merge_features(features_csv, dead_summary_json, output_csv):
     merged["label_deadcode"] = merged["label_deadcode"].fillna(0).astype(int)
     merged["dead_block_count"] = merged["dead_block_count"].fillna(0).astype(int)
 
-    # Create vulnerability label
-    # Rule: if high-risk API exists OR sensitive API calls > 0 => vulnerable
-    if "high_risk_api_flag" in merged.columns and "sensitive_api_calls" in merged.columns:
-        merged["label_vuln"] = (
-            (merged["high_risk_api_flag"].fillna(0) > 0) |
-            (merged["sensitive_api_calls"].fillna(0) > 0)
-        ).astype(int)
-    elif "high_risk_api_flag" in merged.columns:
-        merged["label_vuln"] = (merged["high_risk_api_flag"].fillna(0) > 0).astype(int)
-    elif "sensitive_api_calls" in merged.columns:
-        merged["label_vuln"] = (merged["sensitive_api_calls"].fillna(0) > 0).astype(int)
-    else:
-        merged["label_vuln"] = 0
+         # Create vulnerability label - NOW includes strcpy detection!
+    # Rule: Complex code OR has sensitive API calls (strcpy, gets, etc.)
+    merged["label_vuln"] = (
+        (merged["cyclomatic"].fillna(0) >= 10) |  # Complex functions
+        (merged["sensitive_api_calls"].fillna(0) > 0)  # Unsafe APIs detected
+    ).astype(int)
+    
+    print("\n✅ Vulnerability Label Distribution:")
+    print(merged["label_vuln"].value_counts())
+    print(f"Total vulnerable functions: {(merged['label_vuln'] == 1).sum()}")
 
     # Save final integrated dataset
     merged.to_csv(output_csv, index=False)

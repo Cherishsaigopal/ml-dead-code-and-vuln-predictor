@@ -5,12 +5,12 @@
   "f1_score": 1.0,
   "confusion_matrix": [
     [
-      533,
+      1056,
       0
     ],
     [
       0,
-      130
+      59
     ]
   ],
   "classification_report": {
@@ -18,26 +18,26 @@
       "precision": 1.0,
       "recall": 1.0,
       "f1-score": 1.0,
-      "support": 533.0
+      "support": 1056.0
     },
     "1": {
       "precision": 1.0,
       "recall": 1.0,
       "f1-score": 1.0,
-      "support": 130.0
+      "support": 59.0
     },
     "accuracy": 1.0,
     "macro avg": {
       "precision": 1.0,
       "recall": 1.0,
       "f1-score": 1.0,
-      "support": 663.0
+      "support": 1115.0
     },
     "weighted avg": {
       "precision": 1.0,
       "recall": 1.0,
       "f1-score": 1.0,
-      "support": 663.0
+      "support": 1115.0
     }
   },
   "roc_auc": 1.0

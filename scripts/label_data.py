@@ -19,24 +19,12 @@ def label_dataset(input_csv, output_csv):
     # -------------------------
     # VULNERABILITY LABEL
     # -------------------------
-    df["label_vuln"] = 0
-
-    # Juliet dataset rules
-    juliet = file_col.str.contains("juliet-test-suite-c", na=False)
-
-    df.loc[juliet & func_col.str.contains("bad", na=False), "label_vuln"] = 1
-    df.loc[juliet & func_col.str.contains("good", na=False), "label_vuln"] = 0
-
-    # Non-Juliet heuristic
-    non_juliet = ~juliet
-
-    df.loc[
-        non_juliet & (
-            (df["sensitive_api_calls"] > 0) |
-            (df["cyclomatic"] >= 10)
-        ),
-        "label_vuln"
-    ] = 1
+    # FIXED: Use consistent rule for ALL datasets
+    # Label as vulnerable if: has risky APIs OR complex code
+    df["label_vuln"] = (
+        (df["sensitive_api_calls"].fillna(0) > 0) |  # strcpy, gets, sprintf, etc.
+        (df["cyclomatic"].fillna(0) >= 10)  # High complexity
+    ).astype(int)
 
     df.to_csv(output_csv, index=False)
 
@@ -46,6 +34,9 @@ def label_dataset(input_csv, output_csv):
 
     print("\nVulnerability distribution:")
     print(df["label_vuln"].value_counts())
+    
+    print(f"\n✅ Total vulnerable functions: {(df['label_vuln'] == 1).sum()}")
+    print(f"✅ Total safe functions: {(df['label_vuln'] == 0).sum()}")
 
 
 if __name__ == "__main__":

@@ -82,6 +82,32 @@ def main() -> None:
     df = load_dataset(args.input)
     X, y, meta, feature_cols = get_features_and_target(df, "label_vuln")
 
+    # ========== ADD THIS LEAKAGE REMOVAL SECTION ==========
+    leakage_cols = [
+        "cwe_id",  # CWE ID directly identifies vulnerability type
+        "severity_score",  # Severity might be derived from vulnerability presence
+        "is_vulnerable",  # This likely directly defines the label
+    ]
+
+    possible_extra_leaks = [
+        "has_buffer_overflow",
+        "has_sql_injection", 
+        "has_use_after_free",
+        "has_memory_leak",
+        "vulnerability_count",
+        "vulnerability_type",
+    ]
+
+    drop_leaks = [c for c in leakage_cols + possible_extra_leaks if c in X.columns]
+
+    if drop_leaks:
+        X = X.drop(columns=drop_leaks, errors="ignore")
+        feature_cols = [c for c in feature_cols if c not in drop_leaks]
+        print(f"[INFO] Dropped leakage columns for vulnerability training: {drop_leaks}")
+    
+    print(f"[INFO] Vulnerability feature count: {len(feature_cols)}")
+    # ======================================================
+
     X_train, X_test, y_train, y_test, meta_train, meta_test = train_test_split(
         X, y, meta,
         test_size=args.test_size,

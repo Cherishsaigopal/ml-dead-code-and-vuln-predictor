@@ -1,3 +1,4 @@
+import re
 from dataclasses import dataclass, asdict
 from typing import Dict, Set
 
@@ -64,20 +65,56 @@ def _walk_stmt_tree(node):
         yield from _walk_stmt_tree(ch)
 
 
-def _count_sensitive_from_stmt_tree(fn_body_root) -> tuple[int, int]:
+def _read_source_code(file_path: str, start_line: int, end_line: int) -> str:
+    """
+    Read actual source code from file between line numbers.
+    This is the ONLY reliable way to get the real C code.
+    """
+    try:
+        with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+            lines = f.readlines()
+        
+        # Get lines (convert 1-indexed to 0-indexed)
+        source_lines = lines[start_line-1:end_line]
+        source_code = "".join(source_lines)
+        
+        return source_code
+    except Exception as e:
+        log.warning(f"Could not read source file {file_path}: {e}")
+        return ""
+
+
+def _count_sensitive_from_source(source_code: str) -> tuple[int, int]:
+    """
+    Count sensitive API calls using regex on actual source code.
+    This works because node.text is unreliable.
+    """
     sensitive_api_calls = 0
     high_risk_api_flag = 0
-
-    for node in _walk_stmt_tree(fn_body_root):
-        if node.kind != "call":
-            continue
-
-        call_name = (node.text or "").strip()
-        if call_name in SENSITIVE_APIS:
-            sensitive_api_calls += 1
-        if call_name in HIGH_RISK_APIS:
+    
+    if not source_code:
+        return 0, 0
+    
+    # Count each sensitive API call
+    for api in SENSITIVE_APIS:
+        # Match: strcpy(...), strcpy (...), etc.
+        # The \b ensures we match whole words (not substrings)
+        pattern = rf"\b{re.escape(api)}\s*\("
+        matches = re.findall(pattern, source_code, re.IGNORECASE)
+        
+        if matches:
+            sensitive_api_calls += len(matches)
+            log.debug(f"Found {len(matches)}x {api}")
+    
+    # Check for high-risk APIs
+    for api in HIGH_RISK_APIS:
+        pattern = rf"\b{re.escape(api)}\s*\("
+        matches = re.findall(pattern, source_code, re.IGNORECASE)
+        
+        if matches:
             high_risk_api_flag = 1
-
+            log.debug(f"Found HIGH-RISK: {api}")
+    
     return sensitive_api_calls, high_risk_api_flag
 
 
@@ -109,7 +146,9 @@ def extract_features_from_cfg(
     un_cnt = len(un)
     un_ratio = float(un_cnt) / float(bb) if bb > 0 else 0.0
 
-    sensitive_api_calls, high_risk_api_flag = _count_sensitive_from_stmt_tree(fn_body_root)
+    # ✅ READ SOURCE CODE FROM FILE AND DETECT SENSITIVE APIS
+    source_code = _read_source_code(file_name, fn_start, fn_end)
+    sensitive_api_calls, high_risk_api_flag = _count_sensitive_from_source(source_code)
 
     row = FeatureRow(
         sample_id=sample_id,
