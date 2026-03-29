@@ -248,88 +248,27 @@ The system makes **4 enforcement decisions**:
 
 ---
 
-## 📂 Directory Reference
+## 📂 Core Modules
 
-### Core Modules
-
-**`src/integration/compiler_pipeline.py`**
+### `src/integration/compiler_pipeline.py`
 - Main orchestration module
 - Coordinates feature extraction → prediction → risk scoring → enforcement
 - Saves JSON & text reports
 
-**`src/integration/predictor.py`**
+### `src/integration/predictor.py`
 - Loads trained models & feature scaler
 - Validates input features
 - Makes predictions on new code
 
-**`src/features/extract.py`**
+### `src/features/extract.py`
 - Extracts 17 metrics from Control Flow Graph (CFG)
 - Detects sensitive API calls via regex
 - Reads source code for accurate analysis
 
-**`src/models/train_deadcode.py`** & **`train_vuln.py`**
+### `src/models/train_deadcode.py` & `train_vuln.py`
 - Grid search for optimal hyperparameters
 - Trains Random Forest & XGBoost models
 - Saves best model + metadata
-
----
-
-## ⚙️ Configuration
-
-### Feature Normalization
-`src/features/prepare_ml_dataset.py` defines which features are normalized:
-
-```python
-# Dead code features (excludes unreachable metrics)
-deadcode_features = [
-    "loc", "cyclomatic", "branch_count", "loop_count",
-    "max_nesting_depth", "return_count", "basic_blocks", "cfg_edges",
-    "commit_count", "churn"
-]
-
-# Vulnerability features (excludes sensitive APIs)
-vuln_features = [
-    "loc", "cyclomatic", "branch_count", "loop_count",
-    "max_nesting_depth", "call_count", "return_count",
-    "basic_blocks", "cfg_edges", "unreachable_blocks",
-    "unreachable_ratio", "commit_count", "churn"
-]
-```
-
-### Risk Thresholds
-`src/integration/risk_scorer.py` defines decision boundaries:
-
-```python
-RiskScorer(
-    dead_medium=0.15,      # Dead code medium threshold
-    dead_high=0.35,        # Dead code high threshold
-    vuln_medium=0.15,      # Vulnerability medium threshold
-    vuln_high=0.30,        # Vulnerability high threshold
-    vuln_critical=0.50     # Vulnerability critical threshold
-)
-```
-
----
-
-## 🔧 Troubleshooting
-
-### Issue: Feature Validation Failed
-**Problem**: Model metadata doesn't match extracted features
-**Solution**: Ensure `deadcode_model_metadata.json` and `vuln_model_metadata.json` exist in `models/` directory
-
-### Issue: Scaler Feature Mismatch
-**Problem**: `ValueError: The feature names should match those that were passed during fit`
-**Solution**: Run feature preparation to regenerate scaler:
-```bash
-python -m src.features.prepare_ml_dataset
-```
-
-### Issue: Models Not Found
-**Problem**: `FileNotFoundError: Required model file not found`
-**Solution**: Train models first:
-```bash
-python scripts/run_training.py
-```
 
 ---
 
@@ -347,74 +286,11 @@ Example model performance from training:
 
 ---
 
-## 🔒 Security Considerations
-
-- **No data leakage**: Sensitive API counts not used in training (rule-based instead)
-- **Feature validation**: Input features checked against training metadata
-- **Scaled predictions**: All features normalized to prevent outlier bias
-- **Hybrid approach**: ML + rule-based detection for robust security
-
----
-
-## 🛠️ Future Improvements
-
-- [ ] Add support for Java, Python, JavaScript analysis
-- [ ] Implement incremental learning for model updates
-- [ ] Add web UI dashboard for visualization
-- [ ] Support for distributed analysis (parallel file processing)
-- [ ] Integration with GitHub Actions & CI/CD pipelines
-- [ ] Fine-grained per-line vulnerability reporting
-- [ ] Custom risk threshold configuration files
-
----
-
-## 📝 Citation
-
-If you use this project in research, please cite:
-
-```bibtex
-@software{ml_deadcode_vuln_predictor,
-  title={ML Dead Code and Vulnerability Predictor},
-  author={Cherish Saigopal},
-  year={2024},
-  url={https://github.com/Cherishsaigopal/ml-dead-code-and-vuln-predictor}
-}
-```
-
----
-
-## 📄 License
-
-This project is provided as-is for educational and research purposes.
-
----
-
 ## 👤 Author
 
 **Cherish Saigopal**
 - GitHub: [@Cherishsaigopal](https://github.com/Cherishsaigopal)
 - Repository: [ml-dead-code-and-vuln-predictor](https://github.com/Cherishsaigopal/ml-dead-code-and-vuln-predictor)
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/improvement`)
-3. Commit changes (`git commit -am 'Add new feature'`)
-4. Push to branch (`git push origin feature/improvement`)
-5. Open a Pull Request
-
----
-
-## ❓ Questions & Support
-
-For issues, questions, or suggestions:
-- 📧 Open an issue on GitHub
-- 📚 Check existing discussions
-- 🐛 Report bugs with reproduction steps
 
 ---
 
