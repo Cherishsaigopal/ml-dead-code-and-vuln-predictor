@@ -5,3 +5,12 @@ data/raw/
 data/intermediate/*
 !data/intermediate/version_hist.csv
 !data/intermediate/version_history_final.csv
+
+check_node_text.py
+debug_ast.py
+debug_data.py
+debug_features.py
+debug_features1.py
+debug_model.py
+debug_predict.py
+test_sensitive_detection.py
