@@ -139,7 +139,7 @@ class SecureCompilerPipeline:
 
         for fn in functions:
             cfg = build_cfg(fn)
-
+    
             sample_id = self._make_function_id(
                 fn.file,
                 fn.name,
@@ -161,10 +161,15 @@ class SecureCompilerPipeline:
 
             row = feature_row_to_dict(feature_row)
 
-            # predictor expects these metadata names
-            row["function_id"] = row.pop("sample_id")
-            row["function_name"] = row["function_name"]
-            row["file"] = row.pop("file_name")
+            # ✅ KEEP the original column names from extract.py
+            # DON'T rename - the predictor expects: sample_id, file_name, function_name
+            # row["function_id"] = row.pop("sample_id")  ← REMOVE THIS
+            # row["file"] = row.pop("file_name")         ← REMOVE THIS
+            # row["function_name"] stays as is           ← KEEP THIS
+            
+            # Extract metadata for alerts/reporting
+            row["function_id"] = sample_id  # Add as separate field (don't rename sample_id)
+            row["file"] = fn.file           # Add as separate field (don't rename file_name)
 
             rows.append(row)
 

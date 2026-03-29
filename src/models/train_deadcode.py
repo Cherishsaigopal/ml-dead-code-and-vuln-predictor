@@ -238,7 +238,7 @@ def main() -> None:
     with open(models_dir / "deadcode_model_metadata.json", "w") as f:
         json.dump(metadata, f, indent=2)
         
-    print(f"✅ Dead Code Model: {len(feature_cols)} features (INCLUDES unreachable_blocks/ratio)")
+    print(f"✅ Dead Code Model: {len(feature_cols)} features (EXCLUDES unreachable_blocks/ratio)")
 
 
 if __name__ == "__main__":
