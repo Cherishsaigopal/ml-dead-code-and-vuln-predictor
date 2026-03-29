@@ -84,14 +84,16 @@ def main() -> None:
 
     # ========== ADD THIS LEAKAGE REMOVAL SECTION ==========
     leakage_cols = [
-        "cwe_id",  # CWE ID directly identifies vulnerability type
-        "severity_score",  # Severity might be derived from vulnerability presence
-        "is_vulnerable",  # This likely directly defines the label
+        "sensitive_api_calls",      # Used in: sensitive_api_calls > 0
+        "high_risk_api_flag",       # Used in vulnerability label
+        "cwe_id",                   # CWE ID directly identifies vulnerability
+        "severity_score",           # Severity derived from vulnerability
+        "is_vulnerable",            # Directly defines label
     ]
 
     possible_extra_leaks = [
         "has_buffer_overflow",
-        "has_sql_injection", 
+        "has_sql_injection",
         "has_use_after_free",
         "has_memory_leak",
         "vulnerability_count",
@@ -103,10 +105,9 @@ def main() -> None:
     if drop_leaks:
         X = X.drop(columns=drop_leaks, errors="ignore")
         feature_cols = [c for c in feature_cols if c not in drop_leaks]
-        print(f"[INFO] Dropped leakage columns for vulnerability training: {drop_leaks}")
+        print(f"[INFO] Dropped leakage columns: {drop_leaks}")
     
     print(f"[INFO] Vulnerability feature count: {len(feature_cols)}")
-    # ======================================================
 
     X_train, X_test, y_train, y_test, meta_train, meta_test = train_test_split(
         X, y, meta,

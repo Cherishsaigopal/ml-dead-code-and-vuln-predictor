@@ -83,13 +83,21 @@ def main() -> None:
     X, y, meta, feature_cols = get_features_and_target(df, "label_deadcode")
 
         
-    # ✅ KEEP ALL FEATURES - no leakage removal!
-    # Dead code label uses unreachable_blocks, so model NEEDS these features
-    # This is NOT leakage - it's proper feature engineering
-
-    print(f"[INFO] Using ALL features for dead-code training (no dropping)")
+    leakage_cols = [
+        "unreachable_blocks",    # Used in label!
+        "unreachable_ratio",     # Used in label!
+        "call_count",            # Also related to dead code
+    ]
+    
+    drop_leaks = [c for c in leakage_cols if c in X.columns]
+    
+    if drop_leaks:
+        X = X.drop(columns=drop_leaks, errors="ignore")
+        feature_cols = [c for c in feature_cols if c not in drop_leaks]
+        print(f"[INFO] Dropped leakage columns: {drop_leaks}")
+    
     print(f"[INFO] Dead-code feature count: {len(feature_cols)}")
-    print(f"[INFO] Features include: unreachable_blocks, unreachable_ratio, call_count, etc.")
+
 
     
 
