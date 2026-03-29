@@ -11,20 +11,21 @@
     "action": "allow",
     "reason": "No significant security risk detected.",
     "indicators": [
+      "Unreachable blocks detected",
       "High code churn"
     ],
     "features_used": {
-      "basic_blocks": 2.0,
-      "branch_count": 0.0,
-      "cfg_edges": 1.0,
+      "basic_blocks": 2.0000000000000004,
+      "branch_count": -7.142414863142276e-17,
+      "cfg_edges": 1.0000000000000002,
       "churn": 79.0,
       "commit_count": 2.0,
       "cyclomatic": 1.0,
       "loc": 3.0,
-      "loop_count": 0.0,
-      "max_nesting_depth": 1.0,
-      "return_count": 0.0,
-      "unreachable_blocks": 0.0,
+      "loop_count": -8.162759843591171e-17,
+      "max_nesting_depth": 0.9999999999999999,
+      "return_count": -4.0813799217955855e-17,
+      "unreachable_blocks": 6.122069882693378e-17,
       "unreachable_ratio": 0.0
     }
   },
@@ -40,20 +41,21 @@
     "action": "allow",
     "reason": "No significant security risk detected.",
     "indicators": [
+      "Unreachable blocks detected",
       "High code churn"
     ],
     "features_used": {
-      "basic_blocks": 2.0,
-      "branch_count": 0.0,
-      "cfg_edges": 1.0,
+      "basic_blocks": 2.0000000000000004,
+      "branch_count": -7.142414863142276e-17,
+      "cfg_edges": 1.0000000000000002,
       "churn": 79.0,
       "commit_count": 2.0,
       "cyclomatic": 1.0,
       "loc": 4.0,
-      "loop_count": 0.0,
-      "max_nesting_depth": 1.0,
-      "return_count": 0.0,
-      "unreachable_blocks": 0.0,
+      "loop_count": -8.162759843591171e-17,
+      "max_nesting_depth": 0.9999999999999999,
+      "return_count": -4.0813799217955855e-17,
+      "unreachable_blocks": 6.122069882693378e-17,
       "unreachable_ratio": 0.0
     }
   },
@@ -69,20 +71,21 @@
     "action": "allow",
     "reason": "No significant security risk detected.",
     "indicators": [
+      "Unreachable blocks detected",
       "High code churn"
     ],
     "features_used": {
-      "basic_blocks": 2.0,
-      "branch_count": 0.0,
-      "cfg_edges": 1.0,
+      "basic_blocks": 2.0000000000000004,
+      "branch_count": -7.142414863142276e-17,
+      "cfg_edges": 1.0000000000000002,
       "churn": 79.0,
       "commit_count": 2.0,
       "cyclomatic": 1.0,
       "loc": 4.0,
-      "loop_count": 0.0,
-      "max_nesting_depth": 1.0,
-      "return_count": 0.0,
-      "unreachable_blocks": 0.0,
+      "loop_count": -8.162759843591171e-17,
+      "max_nesting_depth": 0.9999999999999999,
+      "return_count": -4.0813799217955855e-17,
+      "unreachable_blocks": 6.122069882693378e-17,
       "unreachable_ratio": 0.0
     }
   },
@@ -98,20 +101,21 @@
     "action": "allow",
     "reason": "No significant security risk detected.",
     "indicators": [
+      "Unreachable blocks detected",
       "High code churn"
     ],
     "features_used": {
-      "basic_blocks": 2.0,
-      "branch_count": 0.0,
-      "cfg_edges": 1.0,
+      "basic_blocks": 2.0000000000000004,
+      "branch_count": -7.142414863142276e-17,
+      "cfg_edges": 1.0000000000000002,
       "churn": 79.0,
       "commit_count": 2.0,
       "cyclomatic": 1.0,
       "loc": 4.0,
-      "loop_count": 0.0,
-      "max_nesting_depth": 1.0,
-      "return_count": 0.0,
-      "unreachable_blocks": 0.0,
+      "loop_count": -8.162759843591171e-17,
+      "max_nesting_depth": 0.9999999999999999,
+      "return_count": -4.0813799217955855e-17,
+      "unreachable_blocks": 6.122069882693378e-17,
       "unreachable_ratio": 0.0
     }
   },
@@ -127,20 +131,21 @@
     "action": "allow",
     "reason": "No significant security risk detected.",
     "indicators": [
+      "Unreachable blocks detected",
       "High code churn"
     ],
     "features_used": {
-      "basic_blocks": 2.0,
-      "branch_count": 0.0,
-      "cfg_edges": 1.0,
+      "basic_blocks": 2.0000000000000004,
+      "branch_count": -7.142414863142276e-17,
+      "cfg_edges": 1.0000000000000002,
       "churn": 79.0,
       "commit_count": 2.0,
       "cyclomatic": 1.0,
       "loc": 5.0,
-      "loop_count": 0.0,
-      "max_nesting_depth": 1.0,
-      "return_count": 0.0,
-      "unreachable_blocks": 0.0,
+      "loop_count": -8.162759843591171e-17,
+      "max_nesting_depth": 0.9999999999999999,
+      "return_count": -4.0813799217955855e-17,
+      "unreachable_blocks": 6.122069882693378e-17,
       "unreachable_ratio": 0.0
     }
   },
@@ -160,15 +165,15 @@
       "High code churn"
     ],
     "features_used": {
-      "basic_blocks": 3.0,
-      "branch_count": 0.0,
-      "cfg_edges": 1.0,
+      "basic_blocks": 3.0000000000000004,
+      "branch_count": -7.142414863142276e-17,
+      "cfg_edges": 1.0000000000000002,
       "churn": 79.0,
       "commit_count": 2.0,
       "cyclomatic": 1.0,
       "loc": 11.0,
-      "loop_count": 0.0,
-      "max_nesting_depth": 1.0,
+      "loop_count": -8.162759843591171e-17,
+      "max_nesting_depth": 0.9999999999999999,
       "return_count": 1.0,
       "unreachable_blocks": 2.0,
       "unreachable_ratio": 0.6666666666666666

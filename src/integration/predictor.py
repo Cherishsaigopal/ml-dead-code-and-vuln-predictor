@@ -128,10 +128,23 @@ class ModelPredictor:
 
         # ✅ SCALE FEATURES BEFORE PREDICTION
         if self.scaler is not None:
-            numeric_cols = raw_feature_df.select_dtypes(include=['number']).columns.tolist()
+            # Get the feature names the scaler was fit with (from the model)
+            scaler_feature_names = list(self.scaler.feature_names_in_)
+            
+            # Filter raw features to ONLY those the scaler knows about
+            features_to_scale = [col for col in scaler_feature_names if col in raw_feature_df.columns]
+            missing = set(scaler_feature_names) - set(features_to_scale)
+            
+            if missing:
+                raise ValueError(
+                    f"Missing required features for scaling: {missing}\n"
+                    f"Scaler expects: {sorted(scaler_feature_names)}\n"
+                    f"Got: {sorted(raw_feature_df.columns)}"
+                )
+            
             raw_feature_df_scaled = raw_feature_df.copy()
-            raw_feature_df_scaled[numeric_cols] = self.scaler.transform(raw_feature_df[numeric_cols])
-            print(f"✅ Applied scaler to {len(numeric_cols)} numeric features")
+            raw_feature_df_scaled[features_to_scale] = self.scaler.transform(raw_feature_df[features_to_scale])
+            print(f"✅ Applied scaler to {len(features_to_scale)} features")
         else:
             raw_feature_df_scaled = raw_feature_df.copy()
             print(f"⚠️  WARNING: Using raw features (not normalized)")

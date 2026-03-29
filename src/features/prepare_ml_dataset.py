@@ -20,10 +20,10 @@ def normalize_features(input_csv, output_csv):
         "loc", "cyclomatic", "branch_count", "loop_count",
         "max_nesting_depth", "call_count", "return_count",
         "basic_blocks", "cfg_edges",
-        "unreachable_blocks",      # Can use for complexity
-        "unreachable_ratio",       # Can use for complexity
-        "commit_count", "churn"
-        # NOT: sensitive_api_calls, high_risk_api_flag (prevents leakage!)
+        "unreachable_blocks", "unreachable_ratio",
+        "commit_count", "churn",
+        "sensitive_api_calls",      # ✅ ADD THIS
+        "high_risk_api_flag"        # ✅ ADD THIS
     ]
 
     # Normalize all features together

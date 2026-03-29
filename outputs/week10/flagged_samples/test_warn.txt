@@ -12,6 +12,7 @@ Overall Risk         : LOW
 Compiler Action      : ALLOW
 Reason               : No significant security risk detected.
 Indicators           :
+  - Unreachable blocks detected
   - High code churn
 
 ========================================================================
@@ -28,6 +29,7 @@ Overall Risk         : LOW
 Compiler Action      : ALLOW
 Reason               : No significant security risk detected.
 Indicators           :
+  - Unreachable blocks detected
   - High code churn
 
 ========================================================================
@@ -44,6 +46,7 @@ Overall Risk         : LOW
 Compiler Action      : ALLOW
 Reason               : No significant security risk detected.
 Indicators           :
+  - Unreachable blocks detected
   - High code churn
 
 ========================================================================
@@ -60,6 +63,7 @@ Overall Risk         : LOW
 Compiler Action      : ALLOW
 Reason               : No significant security risk detected.
 Indicators           :
+  - Unreachable blocks detected
   - High code churn
 
 ========================================================================
@@ -76,6 +80,7 @@ Overall Risk         : LOW
 Compiler Action      : ALLOW
 Reason               : No significant security risk detected.
 Indicators           :
+  - Unreachable blocks detected
   - High code churn
 
 ========================================================================
