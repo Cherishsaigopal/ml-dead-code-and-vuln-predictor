@@ -4,15 +4,15 @@ SECURITY ALERT
 File                 : C:\ml dead code and vuln predictor\test.cpp
 Function             : test1
 Function ID          : 5629d4e40df79e04
-Dead Code Probability: 0.1200
-Vuln Probability     : 0.0100
-Dead Risk            : LOW
-Vuln Risk            : LOW
-Overall Risk         : LOW
-Compiler Action      : ALLOW
-Reason               : No significant security risk detected.
+Dead Code Probability: 0.2495
+Vuln Probability     : 0.2495
+Dead Risk            : MEDIUM
+Vuln Risk            : MEDIUM
+Overall Risk         : MEDIUM
+Compiler Action      : WARN
+Reason               : Moderate risk detected; compilation allowed with warning.
 Indicators           :
-  - High code churn
+  - No major static indicators exceeded rule thresholds
 
 ========================================================================
 SECURITY ALERT
@@ -20,15 +20,15 @@ SECURITY ALERT
 File                 : C:\ml dead code and vuln predictor\test.cpp
 Function             : test2
 Function ID          : 99ec72de0010ba8f
-Dead Code Probability: 0.1300
-Vuln Probability     : 0.0100
-Dead Risk            : LOW
-Vuln Risk            : LOW
-Overall Risk         : LOW
-Compiler Action      : ALLOW
-Reason               : No significant security risk detected.
+Dead Code Probability: 0.2495
+Vuln Probability     : 0.2495
+Dead Risk            : MEDIUM
+Vuln Risk            : MEDIUM
+Overall Risk         : MEDIUM
+Compiler Action      : WARN
+Reason               : Moderate risk detected; compilation allowed with warning.
 Indicators           :
-  - High code churn
+  - No major static indicators exceeded rule thresholds
 
 ========================================================================
 SECURITY ALERT
@@ -36,17 +36,16 @@ SECURITY ALERT
 File                 : C:\ml dead code and vuln predictor\test.cpp
 Function             : test3
 Function ID          : e83c878b15c1c31e
-Dead Code Probability: 0.1100
-Vuln Probability     : 0.9500
-Dead Risk            : LOW
-Vuln Risk            : CRITICAL
-Overall Risk         : CRITICAL
-Compiler Action      : BLOCK
-Reason               : Critical vulnerability risk exceeds allowed threshold.
+Dead Code Probability: 0.2428
+Vuln Probability     : 0.2428
+Dead Risk            : MEDIUM
+Vuln Risk            : MEDIUM
+Overall Risk         : MEDIUM
+Compiler Action      : WARN
+Reason               : Moderate risk detected; compilation allowed with warning.
 Indicators           :
   - Sensitive API usage detected
   - High-risk API flag triggered
-  - High code churn
 
 ========================================================================
 SECURITY ALERT
@@ -54,15 +53,15 @@ SECURITY ALERT
 File                 : C:\ml dead code and vuln predictor\test.cpp
 Function             : test4
 Function ID          : f669e31fe5b94079
-Dead Code Probability: 0.1300
-Vuln Probability     : 0.0100
-Dead Risk            : LOW
-Vuln Risk            : LOW
-Overall Risk         : LOW
-Compiler Action      : ALLOW
-Reason               : No significant security risk detected.
+Dead Code Probability: 0.2495
+Vuln Probability     : 0.2495
+Dead Risk            : MEDIUM
+Vuln Risk            : MEDIUM
+Overall Risk         : MEDIUM
+Compiler Action      : WARN
+Reason               : Moderate risk detected; compilation allowed with warning.
 Indicators           :
-  - High code churn
+  - No major static indicators exceeded rule thresholds
 
 ========================================================================
 SECURITY ALERT
@@ -70,17 +69,16 @@ SECURITY ALERT
 File                 : C:\ml dead code and vuln predictor\test.cpp
 Function             : test5
 Function ID          : 2ba103bc1c498beb
-Dead Code Probability: 0.1100
-Vuln Probability     : 0.9500
-Dead Risk            : LOW
-Vuln Risk            : CRITICAL
-Overall Risk         : CRITICAL
-Compiler Action      : BLOCK
-Reason               : Critical vulnerability risk exceeds allowed threshold.
+Dead Code Probability: 0.2428
+Vuln Probability     : 0.2428
+Dead Risk            : MEDIUM
+Vuln Risk            : MEDIUM
+Overall Risk         : MEDIUM
+Compiler Action      : WARN
+Reason               : Moderate risk detected; compilation allowed with warning.
 Indicators           :
   - Sensitive API usage detected
   - High-risk API flag triggered
-  - High code churn
 
 ========================================================================
 SECURITY ALERT
@@ -88,13 +86,12 @@ SECURITY ALERT
 File                 : C:\ml dead code and vuln predictor\test.cpp
 Function             : main
 Function ID          : 7951ecafc55d1fa8
-Dead Code Probability: 0.9900
-Vuln Probability     : 0.1200
+Dead Code Probability: 0.8100
+Vuln Probability     : 0.8100
 Dead Risk            : HIGH
-Vuln Risk            : LOW
-Overall Risk         : HIGH
-Compiler Action      : FLAG
-Reason               : High-risk suspicious code detected and flagged for review.
+Vuln Risk            : CRITICAL
+Overall Risk         : CRITICAL
+Compiler Action      : BLOCK
+Reason               : Critical vulnerability risk exceeds allowed threshold.
 Indicators           :
   - Unreachable blocks detected
-  - High code churn
