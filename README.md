@@ -292,6 +292,3 @@ Example model performance from training:
 - GitHub: [@Cherishsaigopal](https://github.com/Cherishsaigopal)
 - Repository: [ml-dead-code-and-vuln-predictor](https://github.com/Cherishsaigopal/ml-dead-code-and-vuln-predictor)
 
----
-
-**Last Updated**: March 2024 | **Status**: Active Development ✅
