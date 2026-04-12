@@ -348,15 +348,33 @@ class SecureCompilerPipeline:
         lines = [ln.strip() for ln in code.splitlines() if ln.strip()]
         unreachable_signals = 0
 
+        # 1. Detect structurally unreachable code (code after return/break)
         for i, line in enumerate(lines[:-1]):
             if re.search(r"\b(return|break|continue|throw)\b", line):
                 nxt = lines[i + 1]
                 if nxt not in {"}", "};"}:
                     unreachable_signals += 1
 
-        unreachable_blocks = min(unreachable_signals, max(0, basic_blocks - 1))
-        ratio = 0.0 if basic_blocks <= 0 else unreachable_blocks / basic_blocks
+        # 2. Detect unused local variables (dead code)
+        for i, line in enumerate(lines):
+            # Match variable declarations like: int x = 10; or char buffer[10];
+            match = re.match(r"^(?:int|char|float|double|bool|auto)\s+([a-zA-Z_]\w*)(\s*=\s*[^;]+|\[[^\]]*\])?\s*;", line)
+            if match:
+                var_name = match.group(1)
+                is_used = False
+                # Check if the variable is ever used in subsequent lines
+                for future_line in lines[i+1:]:
+                    if re.search(rf"\b{var_name}\b", future_line):
+                        is_used = True
+                        break
+                if not is_used:
+                    unreachable_signals += 1
+
+        # Calculate final ratios
+        unreachable_blocks = unreachable_signals
+        ratio = 0.0 if basic_blocks <= 0 else min(1.0, unreachable_blocks / basic_blocks)
         return unreachable_blocks, ratio
+
 
     def _find_git_root(self, path: Path) -> Optional[Path]:
         current = path.parent.resolve()

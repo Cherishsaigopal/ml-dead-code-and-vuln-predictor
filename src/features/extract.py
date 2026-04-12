@@ -3,18 +3,19 @@ from dataclasses import dataclass, asdict
 from typing import Dict, Set
 
 from ..cfg.models import CFG
-from ..analysis.reachability import unreachable_blocks
 from ..utils.log import get_logger
 
 log = get_logger(__name__)
-
 
 SENSITIVE_APIS = {
     "strcpy", "strcat", "gets", "sprintf", "vsprintf",
     "memcpy", "scanf", "sscanf", "system", "popen",
 }
-HIGH_RISK_APIS = {"gets", "strcpy", "sprintf", "vsprintf", "system"}
 
+HIGH_RISK_APIS = {
+    "gets", "strcpy", "sprintf", "vsprintf", "system",
+    "sscanf", "memcpy", "popen" 
+}
 
 @dataclass
 class FeatureRow:
@@ -41,14 +42,12 @@ class FeatureRow:
     commit_count: int
     churn: int
 
-
 def _max_depth_stmt(node, depth: int) -> int:
     best = depth
     increment = 1 if node.kind in ("if", "for", "while", "do", "compound") else 0
     for ch in node.children:
         best = max(best, _max_depth_stmt(ch, depth + increment))
     return best
-
 
 def _count_kinds_in_cfg(cfg: CFG, kinds: Set[str]) -> int:
     c = 0
@@ -58,65 +57,76 @@ def _count_kinds_in_cfg(cfg: CFG, kinds: Set[str]) -> int:
                 c += 1
     return c
 
-
-def _walk_stmt_tree(node):
-    yield node
-    for ch in node.children:
-        yield from _walk_stmt_tree(ch)
-
-
 def _read_source_code(file_path: str, start_line: int, end_line: int) -> str:
-    """
-    Read actual source code from file between line numbers.
-    This is the ONLY reliable way to get the real C code.
-    """
     try:
         with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
             lines = f.readlines()
-        
-        # Get lines (convert 1-indexed to 0-indexed)
         source_lines = lines[start_line-1:end_line]
-        source_code = "".join(source_lines)
-        
-        return source_code
+        return "".join(source_lines)
     except Exception as e:
         log.warning(f"Could not read source file {file_path}: {e}")
         return ""
 
-
 def _count_sensitive_from_source(source_code: str) -> tuple[int, int]:
-    """
-    Count sensitive API calls using regex on actual source code.
-    This works because node.text is unreliable.
-    """
     sensitive_api_calls = 0
     high_risk_api_flag = 0
-    
     if not source_code:
         return 0, 0
     
-    # Count each sensitive API call
     for api in SENSITIVE_APIS:
-        # Match: strcpy(...), strcpy (...), etc.
-        # The \b ensures we match whole words (not substrings)
         pattern = rf"\b{re.escape(api)}\s*\("
         matches = re.findall(pattern, source_code, re.IGNORECASE)
-        
         if matches:
             sensitive_api_calls += len(matches)
-            log.debug(f"Found {len(matches)}x {api}")
     
-    # Check for high-risk APIs
     for api in HIGH_RISK_APIS:
         pattern = rf"\b{re.escape(api)}\s*\("
         matches = re.findall(pattern, source_code, re.IGNORECASE)
-        
         if matches:
             high_risk_api_flag = 1
-            log.debug(f"Found HIGH-RISK: {api}")
-    
+            
     return sensitive_api_calls, high_risk_api_flag
 
+def _count_dead_code_heuristics(source_code: str) -> int:
+    """Accurately detects unused local variables and structurally unreachable code."""
+    lines = [ln.strip() for ln in source_code.splitlines() if ln.strip()]
+    dead_count = 0
+    
+    # 1. Structural dead code (code physically placed after an unconditional return/break)
+    for i, line in enumerate(lines[:-1]):
+        # re.match ensures it STARTS with return/break. It ignores `if (...) return;`
+        if re.match(r"^(return|break|continue|throw)\b", line):
+            nxt = lines[i + 1]
+            # If the next line isn't just a closing bracket, it's dead code!
+            if nxt not in {"}", "};", "break;", "continue;"}:
+                dead_count += 1
+                
+    # 2. Unused variables
+    for i, line in enumerate(lines):
+        # Skip loop/if definitions entirely
+        if line.startswith("for") or line.startswith("while") or line.startswith("if"):
+            continue
+            
+        # Match standard standalone variable declarations (e.g. int x = 5; char buf[10];)
+        match = re.search(r"\b(?:const\s+)?(?:int|char|float|double|bool|auto)\s*\*?\s+([a-zA-Z_]\w*)\s*(?:=|\[|;)", line)
+        
+        if match:
+            var_name = match.group(1)
+            is_used = False
+            
+            # Search subsequent lines for usage
+            for future_line in lines[i+1:]:
+                if future_line in ["}", "};"]:
+                    continue
+                # Ensure variable is used as a whole word
+                if re.search(rf"\b{var_name}\b", future_line):
+                    is_used = True
+                    break
+            
+            if not is_used:
+                dead_count += 1
+                
+    return dead_count
 
 def extract_features_from_cfg(
     sample_id: str,
@@ -142,13 +152,14 @@ def extract_features_from_cfg(
 
     bb = len(cfg.blocks)
     ee = len(cfg.edges)
-    un = unreachable_blocks(cfg)
-    un_cnt = len(un)
-    un_ratio = float(un_cnt) / float(bb) if bb > 0 else 0.0
-
-    # ✅ READ SOURCE CODE FROM FILE AND DETECT SENSITIVE APIS
+    
+    # Read source code
     source_code = _read_source_code(file_name, fn_start, fn_end)
     sensitive_api_calls, high_risk_api_flag = _count_sensitive_from_source(source_code)
+    
+    # ✅ COMPLETELY REPLACE buggy CFG reachability with our string-based heuristics
+    total_unreachable = _count_dead_code_heuristics(source_code)
+    un_ratio = float(total_unreachable) / float(bb) if bb > 0 else 0.0
 
     row = FeatureRow(
         sample_id=sample_id,
@@ -163,7 +174,7 @@ def extract_features_from_cfg(
         return_count=return_count,
         basic_blocks=bb,
         cfg_edges=ee,
-        unreachable_blocks=un_cnt,
+        unreachable_blocks=total_unreachable,
         unreachable_ratio=un_ratio,
         sensitive_api_calls=sensitive_api_calls,
         high_risk_api_flag=high_risk_api_flag,
@@ -171,7 +182,6 @@ def extract_features_from_cfg(
         churn=churn,
     )
     return row
-
 
 def feature_row_to_dict(row: FeatureRow) -> Dict:
     return asdict(row)

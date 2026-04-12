@@ -1,10 +1,10 @@
 ========================================================================
 SECURITY ALERT
 ------------------------------------------------------------------------
-File                 : C:\ml dead code and vuln predictor\test.cpp
+File                 : C:\ml dead code and vuln predictor\test2.cpp
 Function             : test_safe_simple
-Function ID          : b88ec02d2b2dd658
-Dead Code Probability: 0.0200
+Function ID          : ad7866ca668ae9d4
+Dead Code Probability: 0.0300
 Vuln Probability     : 0.0248
 Dead Risk            : LOW
 Vuln Risk            : LOW
@@ -17,10 +17,10 @@ Indicators           :
 ========================================================================
 SECURITY ALERT
 ------------------------------------------------------------------------
-File                 : C:\ml dead code and vuln predictor\test.cpp
+File                 : C:\ml dead code and vuln predictor\test2.cpp
 Function             : test_unused_variable
-Function ID          : 02abf0a026835606
-Dead Code Probability: 1.0000
+Function ID          : c6f04e5fb0eb26d4
+Dead Code Probability: 0.9800
 Vuln Probability     : 0.0248
 Dead Risk            : HIGH
 Vuln Risk            : LOW
@@ -33,10 +33,10 @@ Indicators           :
 ========================================================================
 SECURITY ALERT
 ------------------------------------------------------------------------
-File                 : C:\ml dead code and vuln predictor\test.cpp
+File                 : C:\ml dead code and vuln predictor\test2.cpp
 Function             : test_unreachable_code
-Function ID          : f5025020ca97ab4a
-Dead Code Probability: 1.0000
+Function ID          : a1f68975c577e81c
+Dead Code Probability: 0.9800
 Vuln Probability     : 0.0248
 Dead Risk            : HIGH
 Vuln Risk            : LOW
@@ -49,11 +49,11 @@ Indicators           :
 ========================================================================
 SECURITY ALERT
 ------------------------------------------------------------------------
-File                 : C:\ml dead code and vuln predictor\test.cpp
+File                 : C:\ml dead code and vuln predictor\test2.cpp
 Function             : test_vuln_system
-Function ID          : cf8ddab7f93e669f
-Dead Code Probability: 0.0100
-Vuln Probability     : 0.9748
+Function ID          : 13cdcf90ee805ac8
+Dead Code Probability: 0.0200
+Vuln Probability     : 0.9648
 Dead Risk            : LOW
 Vuln Risk            : CRITICAL
 Overall Risk         : CRITICAL
@@ -65,11 +65,11 @@ Indicators           :
 ========================================================================
 SECURITY ALERT
 ------------------------------------------------------------------------
-File                 : C:\ml dead code and vuln predictor\test.cpp
+File                 : C:\ml dead code and vuln predictor\test2.cpp
 Function             : test_vuln_buffer_overflow
-Function ID          : c6ca0225217f203f
-Dead Code Probability: 0.0100
-Vuln Probability     : 0.9748
+Function ID          : da8768d9dcc77c21
+Dead Code Probability: 0.0200
+Vuln Probability     : 0.9648
 Dead Risk            : LOW
 Vuln Risk            : CRITICAL
 Overall Risk         : CRITICAL
@@ -81,11 +81,11 @@ Indicators           :
 ========================================================================
 SECURITY ALERT
 ------------------------------------------------------------------------
-File                 : C:\ml dead code and vuln predictor\test.cpp
+File                 : C:\ml dead code and vuln predictor\test2.cpp
 Function             : test_mixed_vuln_and_dead_code
-Function ID          : f638920b88695bdd
-Dead Code Probability: 1.0000
-Vuln Probability     : 0.9500
+Function ID          : f65f281b9bc7b401
+Dead Code Probability: 0.9800
+Vuln Probability     : 0.9648
 Dead Risk            : HIGH
 Vuln Risk            : CRITICAL
 Overall Risk         : CRITICAL
@@ -93,15 +93,30 @@ Compiler Action      : BLOCK
 Reason               : Critical vulnerability risk exceeds allowed threshold.
 Indicators           :
   - High-risk API flag triggered
-  - Unreachable blocks detected
 
 ========================================================================
 SECURITY ALERT
 ------------------------------------------------------------------------
-File                 : C:\ml dead code and vuln predictor\test.cpp
+File                 : C:\ml dead code and vuln predictor\test2.cpp
 Function             : test_high_complexity_safe
-Function ID          : b1f2bfe340f78c68
+Function ID          : 794d26bf4aa1271e
 Dead Code Probability: 0.0200
+Vuln Probability     : 0.0301
+Dead Risk            : LOW
+Vuln Risk            : LOW
+Overall Risk         : LOW
+Compiler Action      : ALLOW
+Reason               : No significant security risk detected.
+Indicators           :
+  - No major static indicators exceeded rule thresholds
+
+========================================================================
+SECURITY ALERT
+------------------------------------------------------------------------
+File                 : C:\ml dead code and vuln predictor\test2.cpp
+Function             : test_safe_string_handling
+Function ID          : 40f295ea2431afd6
+Dead Code Probability: 0.0300
 Vuln Probability     : 0.0248
 Dead Risk            : LOW
 Vuln Risk            : LOW
@@ -114,31 +129,15 @@ Indicators           :
 ========================================================================
 SECURITY ALERT
 ------------------------------------------------------------------------
-File                 : C:\ml dead code and vuln predictor\test.cpp
-Function             : test_safe_string_handling
-Function ID          : d1f1213f1849c9c2
-Dead Code Probability: 0.0200
-Vuln Probability     : 0.0148
+File                 : C:\ml dead code and vuln predictor\test2.cpp
+Function             : main
+Function ID          : 0030649be07013b9
+Dead Code Probability: 0.0300
+Vuln Probability     : 0.0348
 Dead Risk            : LOW
 Vuln Risk            : LOW
 Overall Risk         : LOW
 Compiler Action      : ALLOW
 Reason               : No significant security risk detected.
-Indicators           :
-  - No major static indicators exceeded rule thresholds
-
-========================================================================
-SECURITY ALERT
-------------------------------------------------------------------------
-File                 : C:\ml dead code and vuln predictor\test.cpp
-Function             : main
-Function ID          : 49baa82e3cb7b5de
-Dead Code Probability: 1.0000
-Vuln Probability     : 0.0148
-Dead Risk            : HIGH
-Vuln Risk            : LOW
-Overall Risk         : HIGH
-Compiler Action      : FLAG
-Reason               : High-risk suspicious code detected and flagged for review.
 Indicators           :
   - No major static indicators exceeded rule thresholds
